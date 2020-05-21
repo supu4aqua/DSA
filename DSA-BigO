@@ -1,0 +1,31 @@
+1. What is the Big O for this?
+  1) Constant time O(1)
+  2) Linear time O(n)
+
+2. Even or odd
+O(1) - Not dependend on the value of input. It will always take the same time
+
+3. Are you here?
+O(n^2)
+
+4. Doubler
+  O(n) - Depends on length of arrays
+
+5. Naive search
+  O(n)
+
+6. Creating pairs:
+  O(n^2)
+
+7. Compute the sequence
+Algorithm is adding consecutive numbers and pushing the result to new array
+  O(n)
+
+8. An efficient search
+  O(logn)
+
+9. Random element
+  O(1)
+
+10. What Am I?
+  O(n)
