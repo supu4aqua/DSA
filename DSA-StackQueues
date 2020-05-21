@@ -1,0 +1,322 @@
+class _Node {
+    constructor(data, next) {
+        this.data = data;
+        this.next = next
+    }
+}
+
+class Stack {
+    constructor() {
+        this.top = null
+    }
+
+    push(data) {
+        if (this.top === null) {
+            this.top = new _Node(data, null);
+            return this.top
+        }
+
+        const node = new _Node(data, this.top);
+        this.top = node;
+    }
+
+
+    pop() {
+        const node = this.top;
+        this.top = node.next;
+        return node.data;
+    }
+}
+
+const starTrek = new Stack()
+starTrek.push('Kirk')
+starTrek.push('Spock')
+starTrek.push('McCoy')
+starTrek.push('Scotty')
+
+// console.log(starTrek)
+
+function peek(stk) {
+    return stk.top.data;
+}
+
+// console.log(peek(starTrek))
+
+function isEmpty(stk) {
+    if (stk.top === null) {
+        return true
+    }
+
+    return false
+}
+
+const stt = new Stack()
+
+// console.log(isEmpty(starTrek))
+// console.log(isEmpty(stt))
+
+
+function display(stk) {
+    return stk
+}
+
+// console.log(display(starTrek))
+
+// starTrek.pop()
+// starTrek.pop()
+// console.log(display(starTrek))
+
+
+
+function is_palindrome(s) {
+    s = s.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
+
+    const pal = new Stack()
+
+    for (let i = 0; i < s.length; i++) {
+        pal.push(s.charAt(i))
+    }
+
+    let bs = '';
+
+    while (pal.top !== null) {
+        bs = bs + pal.pop()
+    }
+
+    if (s === bs) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+// True, true, true, false
+// console.log(is_palindrome("dad"));
+// console.log(is_palindrome("A man, a plan, a canal: Panama"));
+// console.log(is_palindrome("1001"));
+// console.log(is_palindrome("Tauhida"));
+
+
+function balanced(exp) {
+    const expression = new Stack();
+
+    for (let i = 0; i < exp.length; i++) {
+        expression.push(exp[i])
+    }
+
+    let currNode = expression.top;
+    let brackets = ''
+
+
+    while (currNode !== null) {
+        if (currNode.data === ')' || currNode.data === ']' || currNode.data === '}') {
+            brackets = brackets + currNode.data
+        }
+
+        if (currNode.data === '(' || currNode.data === '[' || currNode.data === '{') {
+            brackets = brackets + currNode.data
+        }
+        currNode = currNode.next
+    }
+
+    const bracketList = new Stack;
+
+    for (let i = 0; i < brackets.length; i++) {
+        bracketList.push(brackets[i])
+    }
+
+    let currNode2 = bracketList.top;
+    brackets = ''
+
+    while (currNode2 !== null) {
+        if (currNode2.data === '(' || currNode2.data === '[' || currNode2.data === '{') {
+            brackets = brackets + currNode2.data
+        }
+
+        if (currNode2.data === ')' || currNode2.data === ']' || currNode2.data === '}') {
+            brackets = brackets + currNode2.data
+        }
+        currNode2 = currNode2.next
+    }
+
+    const accepted = ['()', '[()]', '{[()]}', '{[]}', '{()}', '[]', '{}'];
+
+    if (!accepted.includes(brackets)) {
+        return "ERROR"
+    }
+
+    return "Balanced"
+
+
+}
+
+const exp1 = '1 * (2 + 3)'
+const exp2 = '1 + (2 * 98 - 9'
+const exp3 = '{4 + [2 * (2 -1)]}'
+const exp4 = '{4 + [3 + 2} - 1]'
+
+// console.log(balanced(exp1))
+// console.log(balanced(exp2))
+// console.log(balanced(exp3))
+// console.log(balanced(exp4))
+
+
+const unsorted = new Stack();
+unsorted.push(3)
+unsorted.push(1)
+unsorted.push(2)
+unsorted.push(4)
+
+const sorted = new Stack();
+
+function sortStack(stk) {
+
+    let currNode = stk.top;
+    let highestNode = stk.top;
+    let highest = stk.top.data;
+    let lowest = stk.top.data;
+
+    while (currNode !== null) {
+        if (currNode.data > highest) {
+            highestNode = currNode
+            highest = currNode.data
+        }
+        if (currNode.data < lowest) {
+            lowest = currNode.data
+        }
+        currNode = currNode.next
+    }
+
+    highestNode.data = lowest;
+    sorted.push(highest)
+
+    if (highest === lowest) {
+        console.log(require('util').inspect(sorted, {depth: null}))
+    }
+    if (highest > lowest) {
+        sortStack(stk)
+    }
+
+}
+
+// console.log(sortStack(unsorted))
+
+
+
+class _Node2 {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+
+class Queue {
+    constructor() {
+        this.first = null;
+        this.next = null;
+    }
+
+    enqueue(data) {
+        const node = new _Node2(data);
+
+        if (this.first === null) {
+            this.first = node
+        }
+
+        if (this.last) {
+            this.last.next = node;
+        }
+
+        this.last = node
+    }
+
+
+    dequeue() {
+        if (this.first === null) {
+            return;
+        }
+
+        const node = this.first;
+        this.first = this.first.next;
+
+        if (node === this.last) {
+            this.last = null;
+        }
+
+        return node.value
+    }
+}
+
+
+const starTrekQ = new Queue();
+
+starTrekQ.enqueue('Kirk')
+starTrekQ.enqueue('Spock')
+starTrekQ.enqueue('Uhura')
+starTrekQ.enqueue('Sulu')
+starTrekQ.enqueue('Checkov')
+
+// console.log(starTrekQ)
+
+function peek(q) {
+    return q.first.value
+}
+
+// console.log(peek(starTrekQ))
+
+
+function isEmptyQ(q) {
+    if (q.first === null) {
+        return true
+    }
+
+    return false
+}
+
+// console.log(isEmptyQ(starTrekQ))
+
+const men = new Queue();
+const women = new Queue();
+
+function squareDance(partner) {
+
+    if (partner[0] === 'M') {
+        men.enqueue(partner.slice(2))
+    }
+    if (partner[0] === 'F') {
+        women.enqueue(partner.slice(2))
+    }
+
+    if ((men.first !== null) && (women.first !==null)) {
+        let man = men.first.value;
+        let woman = women.first.value;
+        men.dequeue()
+        women.dequeue()
+        console.log(`Female dancer is ${woman}, male dancer is ${man}`)
+    }
+
+
+    if ((men.first !== null) && (women.first === null)) {
+        let currNode = men.first
+        let tot = 0
+        while (currNode !== null) {
+            tot++
+            currNode = currNode.next
+        }
+        console.log(`There are ${tot} male dancers waiting`)
+    }
+
+    if ((women.first !== null) && (men.first === null)) {
+        let currNode = women.first
+        let tot = 0
+        while (currNode !== null) {
+            tot++
+            currNode = currNode.next
+        }
+        console.log(`There are ${tot} female dancers waiting`)
+    }
+}
+
+// squareDance('F Jane')
+// squareDance('M Frank')

@@ -1,0 +1,207 @@
+class Memory {
+    constructor() {
+      this.memory = new Float64Array(1024);
+      this.head = 0;
+    }
+    allocate(size) {
+      if (this.head + size > this.memory.length) {
+        return null;
+      }
+      let start = this.head;
+      this.head += size;
+      return start;
+    }
+    free(ptr) {}
+    copy(toIdx, fromIdx, size) {
+      if (fromIdx === toIdx) {
+        return;
+      }
+      if (fromIdx > toIdx) {
+        // Iterate forwards
+        for (let i = 0; i < size; i++) {
+          this.set(toIdx + i, this.get(fromIdx + i));
+        }
+      } else {
+        // Iterate backwards
+        for (let i = size - 1; i >= 0; i--) {
+          this.set(toIdx + i, this.get(fromIdx + i));
+        }
+      }
+    }
+    get(ptr) {
+      return this.memory[ptr];
+    }
+    set(ptr, value) {
+      this.memory[ptr] = value;
+    }
+  }
+let memoryClass = new Memory();
+class Array {
+    constructor() {
+        this.length = 0;
+        this._capacity = 0;
+        this.ptr = memoryClass.allocate(this.length);
+    }
+    push(value) {
+        if (this.length >= this._capacity) {
+            this._resize((this.length + 1) * Array.SIZE_RATIO);
+        }
+        memoryClass.set(this.ptr + this.length, value);
+        this.length++;
+    }
+    _resize(size) {
+        const oldPtr = this.ptr;
+        this.ptr = memoryClass.allocate(size);
+        if (this.ptr === null) {
+            throw new Error('Out of memory');
+        }
+        memoryClass.copy(this.ptr, oldPtr, this.length);
+        memoryClass.free(oldPtr);
+        this._capacity = size;
+    }
+    get(index) {
+        if (index < 0 || index >= this.length) {
+            throw new Error('Index error');
+        }
+        return memory.get(this.ptr + index)
+    }
+    pop() {
+        if (this.length == 0) {
+            throw new Error('Index error')
+        }
+        const value = memoryClass.get(this.ptr + this.length - 1);
+        this.length --;
+        return value;
+    }
+    insert(index, value) {
+        if (index < 0 || index >= this.length) {
+            throw new Error('Index error')
+        }
+        if (this.length < this._capacity) {
+            this._resize((this.length + 1) * Array.SIZE_RATIO);
+        }
+        memoryClass.copy(this.ptr + index + 1, this.ptr + index, this.length - index)
+        memoryClass.set(this.ptr + index, value)
+        this.length++
+    }
+    remove(index) {
+        if (index < 0 || index >= this.length) {
+            throw new Error('Index error');
+        }
+        memoryClass.copy(this.ptr + index, this.ptr + index + 1, this.length - index - 1);
+        this.length--;
+    }
+}
+Array.SIZE_RATIO = 3;
+function main() {
+    Array.SIZE_RATIO = 3;
+    let arr = new Array;
+    arr.push(3)
+    arr.push(5);
+    arr.push(15);
+    arr.push(19);
+    arr.push(45);
+    arr.push(10);
+    arr.pop();
+    arr.pop();
+    arr.pop();
+    console.log(arr)
+}
+// main()
+function urlify(str) {
+    str = str.replace(' ', '%20')
+    return `${str}`
+}
+// console.log(urlify('tauhida parveen'))
+function filter(arr, value) {
+    if (!(arr.find(element => element < value))) {
+        return arr
+    }
+    val = arr.find(element => element < value);
+    arr.splice(arr.indexOf(val), 1)
+    return filter(arr, value)
+}
+// console.log(filter([10, 12, 4, 3, 6, 5, 9, 22, 4, 2], 5))
+function maxSum(arr) {
+    let max = 0;
+    for (let i = 0; i < arr.length; i++) {
+        let tempSum = 0;
+        for (let j = i; j < arr.length; j++) {
+            tempSum += arr[j];
+            if (tempSum > max) {
+                max = tempSum;
+            }
+        }
+    }
+    return max;
+}
+// console.log(maxSum([4, 6, -3, 5, -2, 1]))
+function merge(arr1, arr2) {
+    if (arr2.length === 0) {
+        return arr1.sort((a, b) => a - b)
+    }
+    arr1.push(arr2[0]);
+    arr2.shift();
+    return merge(arr1, arr2)
+}
+// console.log(merge([1, 3, 6, 8, 11], [2, 3, 5, 8, 9, 10]))
+function stringFilter(string, filter) {
+    let array = [...string]
+    let filterArr = [...filter]
+    for (let i = 0; i < filterArr.length; i++) {
+        const letter1 = filterArr[i];
+        for (let j = 0; j < array.length; j++) {
+            const letter2 = array[j];
+            if (letter1 === letter2) {
+                array.splice(j, 1)
+            }
+        }
+    }
+    return array;
+}
+// console.log(stringFilter('Battle of the Vowels: Hawaii vs. Grozny', 'aeiou'))
+function products(arr) {
+    let prods = [];
+    for (let i = 0; i < arr.length; i++) {
+        let prod = 1;
+        for (let j = 0; j < arr.length; j++) {
+            if (j === i) {
+                prod = prod;
+            } else {
+                prod = prod * arr[j]
+            }
+        }
+        prods.push(prod)
+    }
+    return prods;
+}
+// console.log(products([1, 3, 9, 4]))
+function twoDArray(arr) {
+    let arr2 = [...arr];
+    for (let i = 0; i < arr.length; i++) {
+        arr2[i] = [...arr[i]]
+    }
+    for (let j = 0; j < arr.length; j++) {
+        if (arr[j].includes(0)) {
+            for (let k = 0; k < arr[j].length; k++) {
+                arr2[j][k] = 0
+                }
+            }
+        for (let k = 0; k < arr[j].length; k++) {
+            if (arr[j][k] == 0) {
+                for (let l = 0; l < arr.length - 1; l++) {
+                    if (arr[j + l]) {arr2[j + l][k] = 0}
+                }
+            }
+        }
+    }
+    return arr2
+}
+let array = [
+    [1,0,1,1,0],
+    [0,1,1,1,0],
+    [1,1,1,1,1],
+    [1,0,1,1,1],
+    [1,1,1,1,1]
+];
+// console.log(twoDArray(array))
